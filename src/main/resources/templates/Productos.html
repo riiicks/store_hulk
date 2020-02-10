@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head th:replace="fragments/head :: head"></head>
+<style>
+table {
+	font-size: 13px;
+}
+
+.nuevo-producto-btn {
+	position: absolute;
+	bottom: 80px;
+	right: 70px;
+	background: green;
+	padding: 10px;
+	border-radius: 11px;
+	color: white;
+	cursor: pointer;
+}
+</style>
+<body>
+	<div class="wrapper">
+		<nav th:replace="fragments/sidebar :: sidebar"></nav>
+
+		<div id="content">
+
+			<button type="button" id="sidebarCollapse" class="btn btn-light">
+				<img alt="" src="icons/menu.svg">
+			</button>
+
+
+			<h1 class="text-center mb-6 mt-3">Productos</h1>
+			<div class="">
+				<table class="table table-hover display nowrap table-striped">
+					<thead>
+						<tr>
+							<th>ID</th>
+							<th>Nombre</th>
+							<th>Cantidad</th>
+							<th>Precio</th>
+							<th>Editar</th>
+							<th>Remover</th>
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+
+
+			</div>
+			<div class="nuevo-producto-btn" data-toggle="modal"
+				data-target="#modNuevoProducto">
+				<i class="fas fa-plus"></i>Nuevo Producto
+			</div>
+			<footer th:replace="fragments/footer :: footer"></footer>
+		</div>
+
+		<div class="modal" tabindex="-1" role="dialog" id="modNuevoProducto">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">Agregar producto</h5>
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<form>
+							<div class="form-group">
+								<label for="formGroupExampleInput">Descripci&oacute;n</label> <input
+									type="text" class="form-control" id="txtDescProd" required="required"/>
+							</div>
+							<div class="form-group">
+								<label for="formGroupExampleInput2">Cantidad</label> <input
+									type="number" min="0" max=99999 class="form-control" id="txtCantProd" required="required"/>
+							</div>							
+							<div class="form-group">
+								<label for="formGroupExampleInput3">Precio</label> <input
+									type="number" min="0" max=99999 class="form-control" id="txtPrecProd" required="required"/>
+							</div>
+						</form>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-primary" id="btnGuardarProducto">Guardar</button>
+						<button type="button" class="btn btn-secondary"
+							data-dismiss="modal">Cancelar</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script>
+	
+	var productos = (function() {
+		
+		var suscribeEvents = function() {
+			$("#btnGuardarProducto").on("click", function(){
+				
+				var request = {
+						"descripcion": $("#txtDescProd").val(),
+						"cantidad": $("#txtCantProd").val(), 
+						"precio": $("#txtPrecProd").val() 
+						
+				};
+				
+				if(request.descripcion != ""){
+					
+					$.post({
+						url: "store/producto/ingreso", 
+						contentType: "application/json", 
+						data: JSON.stringify(request), 
+						dataType: "json", 
+						success:function(){
+							events.getProductos();
+							$("#txtCantProd").val(""); 
+							$("#txtDescProd").val("");
+							$("#txtPrecProd").val("");
+							$("#modNuevoProducto").modal("hide");
+						}
+					})
+				}else{
+					alert("Ingrese descripcion");
+				}
+			});
+		}
+		
+		var initProperties = function() {
+			events.getProductos();
+		}
+		
+		var events = {
+			getProductos: function(){
+				$("table tbody").html("");
+				$.getJSON("store/productos", function(res) {
+					
+					$.each(res.producto, function(k, v) {
+						$("table tbody").append(
+								$("<tr/>").html($("<td/>").html(v.productoId))
+								.append(
+									$("<td/>").html(v.producto))
+								.append(
+									$("<td/>").html(v.cantidad))
+								.append(
+									$("<td/>").html(v.precio))
+								.append(
+									$("<td/>").html(
+										$("<div/>").addClass("btn").html(
+											$("<i/>").addClass("fas fa-edit")
+										).on("click", function(){
+											events.updateProducto(v.productoId)
+										})
+									))
+								.append(
+									$("<td/>").html(
+										$("<div/>").addClass("btn").html(
+											$("<i/>").addClass("fas fa-trash-alt")
+										).on("click", function(){
+											events.deleteProducto(v.productoId)
+										})
+									))
+								);
+					});
+				});
+			},
+			updateProducto: function(idProducto){
+				
+			},
+			deleteProducto: function(idProducto){
+				$.getJSON("store/producto/salida/"+idProducto, function(res) {
+					events.getProductos();
+				});
+			}
+		}
+		
+		var initialize = function() {
+			suscribeEvents();
+			initProperties();
+		};
+
+		return {
+			init : initialize
+		}
+	})();
+
+
+	$(document).ready(function() {
+		productos.init();
+	});
+
+
+
+	
+		
+	</script>
+</body>
+
+</html>

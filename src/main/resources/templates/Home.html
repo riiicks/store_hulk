@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head th:replace="fragments/head :: head"></head>
+
+<body>
+    <div class="wrapper">
+        <nav th:replace="fragments/sidebar :: sidebar"></nav>
+
+        <!-- Page Content  -->
+        <div id="content">
+
+            <button type="button" id="sidebarCollapse" class="btn btn-light">
+                <img alt="" src="icons/menu.svg">
+            </button>
+
+
+            <div>
+            	<h1> &#161;&#161;&#161; Bienvenidos a Hulk Store !!!</h1>            	
+            </div>
+
+			<footer  th:replace="fragments/footer :: footer"></footer>
+
+        </div>
+
+    </div>
+    <script type="text/javascript">
+    </script>
+</body>
+
+</html>

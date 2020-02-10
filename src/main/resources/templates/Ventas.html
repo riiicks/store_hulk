@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head th:replace="fragments/head :: head"></head>
+<style>
+.botones{
+		    position: absolute;
+		    bottom: 100px;
+		    right: 50px;
+	    }
+</style>
+<body>
+	<div class="wrapper">
+		<nav th:replace="fragments/sidebar :: sidebar"></nav>
+
+		<!-- Page Content  -->
+		<div id="content">
+
+			<button type="button" id="sidebarCollapse" class="btn btn-light">
+				<img alt="" src="icons/menu.svg">
+			</button>
+
+
+			<h1 class="text-center mb-5 mt-3">Ventas</h1>
+
+			<form>
+				<div class="form-group row">
+					<label for="colFormLabelSm"
+						class="col-sm-2 col-form-label col-form-label-sm">Producto</label>
+					<div class="col-sm-8">
+						<input type="number" class="form-control form-control-sm"
+							id="txtProducto" placeholder="Busque por id">
+					</div>
+					<div class="col-sm-2">
+						<div class="btn btn-primary" id="btnBuscarProducto">Buscar</div>
+					</div>
+				</div>
+
+			</form>
+
+			<ul class="list-group" id="listVentas">
+			</ul>
+
+			<div class="botones">
+				<div class="btn btn-secondary" id="btnCancelar">Cancelar</div>
+				<div class="btn btn-primary" id="btnVender">Vender</div>
+			</div>
+			<footer th:replace="fragments/footer :: footer"></footer>
+		</div>
+
+	</div>
+	<script type="text/javascript">
+		var ventas = (function() {
+
+			var suscribeEvents = function() {
+				$("#btnBuscarProducto").on("click", function() {
+					events.getProductoById();
+				});
+				$("#btnCancelar").on("click", function() {
+					$("#listVentas li").remove();
+				});
+				$("#btnVender").on("click", function() {
+					$.each($("#listVentas li"), function(k,v){
+						var producto = ($(v).data("producto"));
+						
+
+						var request = {
+								"cantidad": producto.cantidad - parseInt($("#spn"+producto.productoId).html()), 
+								"productoId": producto.productoId
+						};
+						
+						$.post({
+							url: "store/producto/modificacion", 
+							contentType: "application/json", 
+							data: JSON.stringify(request), 
+							dataType: "json", 
+							success:function(){
+								alert(producto.producto+ "nueva existencia = "+ request.cantidad);
+								$("#li"+producto.productoId).remove();
+							}
+						})
+						
+						
+						
+					})
+					//$("#listVentas li").remove();
+				});
+			}
+
+			var initProperties = function() {
+			}
+
+			var events = {
+				getProductoById : function() {
+					
+					
+					var productoId = $("#txtProducto").val();
+					if($("#li"+productoId).length){
+						alert("Producto ya listado")
+					}else{
+						$.getJSON("store/producto/"+productoId,function(res) {
+							var producto = res.producto[0];
+							if(producto.productoId == null){
+								alert("no se encontré el producto, intente otro id")
+							} else if(producto.cantidad> 0){
+								$("#listVentas").append(
+										$("<li/>")
+										.attr("id", "li"+producto.productoId)
+										.addClass("list-group-item d-flex justify-content-between align-items-center")
+										.data("producto", producto)
+										.html(
+												producto.producto
+										).append(
+											$("<div/>").html(
+												$("<div/>").addClass("btn").html(
+													$("<i/>").addClass("fas fa-minus")
+												).on("click", function(){
+													var cantVenta = $("#spn"+producto.productoId).html();  
+													if (cantVenta>1){
+														$("#spn"+producto.productoId).html(cantVenta - 1); 
+													}else{
+														$("#li"+producto.productoId).remove();  
+													}
+												})
+											).append(
+												$("<span/>").addClass("badge badge-primary badge-pill").attr("id", "spn"+producto.productoId).html(1)
+											).append(
+												$("<div/>").addClass("btn").html(
+													$("<i/>").addClass("fas fa-plus")
+												).on("click", function(){
+													var cantVenta = parseInt($("#spn"+producto.productoId).html());  
+													if (producto.cantidad > cantVenta){
+														$("#spn"+producto.productoId).html(cantVenta + 1); 
+													}else{
+														alert("Límite de existencias");
+													}
+												})
+											)
+										)
+									);
+							}else{
+								alert("Sin existencias para ese producto")
+							}
+							
+						});
+					}
+					
+					
+					$("#txtProducto").val("");
+				}
+			}
+
+			var initialize = function() {
+				suscribeEvents();
+				initProperties();
+			};
+
+			return {
+				init : initialize
+			}
+		})();
+
+		$(document).ready(function() {
+			ventas.init();
+		});
+	</script>
+</body>
+
+</html>
