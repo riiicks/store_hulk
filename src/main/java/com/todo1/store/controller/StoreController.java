@@ -69,4 +69,13 @@ public class StoreController {
 
 	}
 
+	@RequestMapping(value = "/producto/venta", method = RequestMethod.POST)
+	public @ResponseBody ResponseEntity<BaseResponse> ventaProductoId(@PathVariable("productoId") Long productoId) {
+
+		CatalogoResponse response = storeService.getProductoById(productoId);
+
+		return new ResponseEntity<>(response, HttpStatus.OK);
+
+	}
+
 }

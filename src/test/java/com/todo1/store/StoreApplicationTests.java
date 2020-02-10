@@ -22,7 +22,7 @@ class StoreApplicationTests {
 	@Autowired
 	private StoreController controller;
 
-//	@Test
+	@Test
 	public void getProductos() {
 
 		ResponseEntity<CatalogoResponse> response = controller.getProductos();
@@ -36,7 +36,7 @@ class StoreApplicationTests {
 
 	}
 
-//	@Test
+	@Test
 	public void getProductoById() {
 
 		ResponseEntity<CatalogoResponse> response = controller.getProductoById(1L);

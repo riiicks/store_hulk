@@ -7,9 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.todo1.store.data.dao.ProductoDAO;
+import com.todo1.store.data.dao.VentaDAO;
 import com.todo1.store.data.dto.ProductoDTO;
+import com.todo1.store.data.dto.VentaDTO;
 import com.todo1.store.request.AltaProductoRequest;
 import com.todo1.store.request.ModificacionProductoRequest;
+import com.todo1.store.request.VentaProductoRequest;
 import com.todo1.store.response.BaseResponse;
 import com.todo1.store.response.CatalogoResponse;
 import com.todo1.store.response.ProductoResponse;
@@ -19,6 +22,9 @@ public class StoreService {
 
 	@Autowired
 	private ProductoDAO productoDAO;
+
+	@Autowired
+	private VentaDAO ventaDAO;
 
 	public CatalogoResponse getProductos() {
 
@@ -72,5 +78,13 @@ public class StoreService {
 
 		return new CatalogoResponse("ok", "", lstResponse);
 
+	}
+
+	public BaseResponse ventaProducto(VentaProductoRequest request) {
+
+		if (ventaDAO.saveVenta(new VentaDTO(request.getProductoId(), request.getCantidad())))
+			return new BaseResponse("ok", "");
+		else
+			return new BaseResponse("ko", "ocurrio un error al guardar el producto.Contacte al administrador");
 	}
 }

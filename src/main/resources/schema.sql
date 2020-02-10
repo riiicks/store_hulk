@@ -7,7 +7,9 @@ fecha_ingreso timestamp default NOW(),
 estatus INTEGER default 1
 );
 
-CREATE TABLE salida(
+CREATE TABLE venta(
+venta_id BIGINT  PRIMARY KEY AUTO_INCREMENT,
 producto_id BIGINT,
-fecha_salida timestamp default NOW()
+cantidad INTEGER,
+fecha_venta timestamp default NOW()
 );

@@ -46,7 +46,9 @@ public class ProductoDAO extends AbstractDAO {
 
 		try {
 
-			final String sql = "delete from producto where producto_id = ?";
+			final String sql = "update producto set estatus = 0 where producto_id = ?";
+
+//			final String sql = "delete from producto where producto_id = ?";
 
 			template.update(sql, productoId);
 
