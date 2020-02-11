@@ -15,14 +15,14 @@ import com.todo1.store.request.ModificacionProductoRequest;
 import com.todo1.store.request.VentaProductoRequest;
 import com.todo1.store.response.BaseResponse;
 import com.todo1.store.response.CatalogoResponse;
-import com.todo1.store.service.StoreService;
+import com.todo1.store.service.StoreServiceImp;
 
 @RestController
 @RequestMapping("/store")
 public class StoreController {
 
 	@Autowired
-	private StoreService storeService;
+	private StoreServiceImp storeService;
 
 	@RequestMapping(value = "/productos", method = RequestMethod.GET)
 	public @ResponseBody ResponseEntity<CatalogoResponse> getProductos() {

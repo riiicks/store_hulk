@@ -8,6 +8,11 @@ import com.todo1.store.data.dto.VentaDTO;
 @Repository
 public class VentaDAO extends AbstractDAO {
 
+	/*
+	 * En el metodo siguiente para registrar una venta realiza un insert en la venta
+	 * y despues actualiza en la tabla de producto.
+	 */
+	@Transactional
 	public boolean saveVenta(VentaDTO dto) {
 
 		try {
