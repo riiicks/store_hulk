@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.todo1.store.request.AltaProductoRequest;
 import com.todo1.store.request.ModificacionProductoRequest;
+import com.todo1.store.request.VentaProductoRequest;
 import com.todo1.store.response.BaseResponse;
 import com.todo1.store.response.CatalogoResponse;
 import com.todo1.store.service.StoreService;
@@ -70,9 +71,9 @@ public class StoreController {
 	}
 
 	@RequestMapping(value = "/producto/venta", method = RequestMethod.POST)
-	public @ResponseBody ResponseEntity<BaseResponse> ventaProductoId(@PathVariable("productoId") Long productoId) {
+	public @ResponseBody ResponseEntity<BaseResponse> ventaProducto(@RequestBody VentaProductoRequest request) {
 
-		CatalogoResponse response = storeService.getProductoById(productoId);
+		BaseResponse response = storeService.ventaProducto(request);
 
 		return new ResponseEntity<>(response, HttpStatus.OK);
 

@@ -6,3 +6,5 @@ insert into producto (descripcion, cantidad, precio)values('Carro de carreras ba
 insert into producto (descripcion, cantidad, precio)values('Marvel Venom Bust Bank ',12, 283.12);
 insert into producto (descripcion, cantidad, precio)values('Marvel Encyclopedia, New Edition ',1, 542.87);
 insert into producto (descripcion, cantidad, precio)values('Civil War: Captain America/Iron Man;Captain America ',2, 456.85);
+insert into venta (producto_id, cantidad)values(1,2);
+

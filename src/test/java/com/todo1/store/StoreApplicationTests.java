@@ -70,4 +70,23 @@ class StoreApplicationTests {
 
 	}
 
+	@Test
+	public void saveProducto() {
+
+		ModificacionProductoRequest request = new ModificacionProductoRequest();
+
+		request.setCantidad(10);
+
+		request.setProductoId(1L);
+
+		request.setPrecio((float) 8.90);
+
+		ResponseEntity<BaseResponse> response = controller.actualizaProducto(request);
+
+		log.info("Test ...........");
+
+		if (response.getStatusCode() == HttpStatus.OK)
+			log.info("Succes !!!");
+
+	}
 }

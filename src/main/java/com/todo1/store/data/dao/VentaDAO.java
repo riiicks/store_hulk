@@ -1,6 +1,7 @@
 package com.todo1.store.data.dao;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.todo1.store.data.dto.VentaDTO;
 
@@ -10,9 +11,13 @@ public class VentaDAO extends AbstractDAO {
 	public boolean saveVenta(VentaDTO dto) {
 
 		try {
-			final String sql = "insert into producto (producto_id, cantidad) values ( ?, ?)";
+			String sql = "insert into venta (producto_id, cantidad) values ( ?, ?)";
 
 			template.update(sql, dto.getProductoId(), dto.getCantidad());
+
+			sql = "update producto set cantidad = ? where producto_id = ?;";
+
+			template.update(sql, dto.getCantidad(), dto.getProductoId());
 
 			return true;
 		} catch (Exception e) {
